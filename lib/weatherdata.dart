@@ -1,30 +1,106 @@
+import 'package:farmersguide/alerts.dart';
+import 'package:farmersguide/input.dart';
+import 'package:farmersguide/insights.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class PredictionPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final double latitude;
   final double longitude;
+
+  const HomePage({super.key, required this.latitude, required this.longitude});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  // List of pages for the BottomNavigationBar
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the pages, including the PredictionPage with latitude and longitude
+    _pages = <Widget>[
+      const CitySelection(), // Home
+      const Insights(), // Insights
+      const Alerts(), // Alerts
+      PredictionPage(
+          latitude: widget.latitude,
+          longitude: widget.longitude), // Prediction Page
+    ];
+  }
+
+  // Method to handle navigation item tap
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Farmers Guide'),
+      ),
+      body: _pages[_selectedIndex], // Update this to show the selected page
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped, // Update index on tap
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.insights),
+            label: 'Insights',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.warning),
+            label: 'Alerts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud),
+            label: 'Predictions',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PredictionPage extends StatefulWidget {
+  final double? latitude;
+  final double? longitude;
 
   const PredictionPage(
       {super.key, required this.latitude, required this.longitude});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PredictionPageState createState() => _PredictionPageState();
 }
 
 class _PredictionPageState extends State<PredictionPage> {
-  List<Map<String, dynamic>> _predictionResults = [];
+  List<Map<String, dynamic>> _threeMonthPredictions = [];
   String _errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    _fetchPredictions();
+    _fetchThreeMonthPredictions();
   }
 
   // Fetches prediction data for the next three months
-  Future<void> _fetchPredictions() async {
+  Future<void> _fetchThreeMonthPredictions() async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -33,34 +109,34 @@ class _PredictionPageState extends State<PredictionPage> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
         if (data is List) {
           setState(() {
-            _predictionResults = List<Map<String, dynamic>>.from(data);
+            _threeMonthPredictions = List<Map<String, dynamic>>.from(data);
           });
         } else {
-          setState(() {
-            _errorMessage = 'Unexpected data format from server.';
-          });
+          _setError('Unexpected data format from server.');
         }
       } else {
-        setState(() {
-          _errorMessage = 'Error fetching predictions.';
-        });
+        _setError('Error fetching 3-month predictions: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error fetching predictions.';
-      });
-      print('Error fetching predictions: $e');
+      _setError('Error fetching 3-month predictions.');
+      if (kDebugMode) {
+        print('Error fetching 3-month predictions: $e');
+      }
     }
+  }
+
+  void _setError(String message) {
+    setState(() {
+      _errorMessage = message;
+    });
   }
 
   // Converts month number to month name
   String _getMonthName(dynamic month) {
-    // Cast month to int if it's a double (e.g., 6.0 => 6)
     int monthInt = (month is double) ? month.toInt() : month;
-    const List<String> monthNames = [
+    const monthNames = [
       'January',
       'February',
       'March',
@@ -110,11 +186,12 @@ class _PredictionPageState extends State<PredictionPage> {
         padding: const EdgeInsets.all(16.0),
         child: _errorMessage.isNotEmpty
             ? Center(child: Text(_errorMessage))
-            : _predictionResults.isNotEmpty
+            : _threeMonthPredictions.isNotEmpty
                 ? ListView.builder(
-                    itemCount: _predictionResults.length,
+                    shrinkWrap: true,
+                    itemCount: _threeMonthPredictions.length,
                     itemBuilder: (context, index) {
-                      final prediction = _predictionResults[index];
+                      final prediction = _threeMonthPredictions[index];
                       final monthName = _getMonthName(prediction['month']);
                       final severityText = _getSeverityText(
                         prediction['drought_occurrence'],
