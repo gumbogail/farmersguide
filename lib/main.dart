@@ -1,5 +1,8 @@
+// ignore_for_file: unused_import
+
+import 'package:farmersguide/home.dart';
 import 'package:flutter/material.dart';
-import 'weatherdata.dart'; // Prediction page
+import 'droughtresuts.dart'; // Prediction page
 
 void main() {
   runApp(const MyApp());

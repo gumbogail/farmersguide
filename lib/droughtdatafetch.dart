@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:farmersguide/weatherdata.dart';
+import 'package:farmersguide/droughtresuts.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CitySelection extends StatefulWidget {
-  const CitySelection({super.key});
+  const CitySelection(
+      {super.key, required double longitude, required double latitude});
 
   @override
   // ignore: library_private_types_in_public_api

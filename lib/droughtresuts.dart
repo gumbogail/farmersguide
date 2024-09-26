@@ -1,81 +1,8 @@
-import 'package:farmersguide/alerts.dart';
-import 'package:farmersguide/input.dart';
-import 'package:farmersguide/insights.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-class HomePage extends StatefulWidget {
-  final double latitude;
-  final double longitude;
-
-  const HomePage({super.key, required this.latitude, required this.longitude});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-
-  // List of pages for the BottomNavigationBar
-  late List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the pages, including the PredictionPage with latitude and longitude
-    _pages = <Widget>[
-      const CitySelection(), // Home
-      const Insights(), // Insights
-      const Alerts(), // Alerts
-      PredictionPage(
-          latitude: widget.latitude,
-          longitude: widget.longitude), // Prediction Page
-    ];
-  }
-
-  // Method to handle navigation item tap
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Farmers Guide'),
-      ),
-      body: _pages[_selectedIndex], // Update this to show the selected page
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Update index on tap
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insights),
-            label: 'Insights',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.warning),
-            label: 'Alerts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cloud),
-            label: 'Predictions',
-          ),
-        ],
-      ),
-    );
-  }
-}
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+// import 'home.dart';
 
 class PredictionPage extends StatefulWidget {
   final double? latitude;
