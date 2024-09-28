@@ -30,7 +30,7 @@ class _PredictionStormState extends State<PredictionStorm> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://storm-models.onrender.com/predict_next_three_months?latitude=${widget.latitude}&longitude=${widget.longitude}'),
+            'https://storm-models.onrender.com/predict_rain?latitude=${widget.latitude}&longitude=${widget.longitude}'),
       );
 
       if (response.statusCode == 200) {

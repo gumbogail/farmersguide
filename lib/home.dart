@@ -1,3 +1,4 @@
+import 'package:farmersguide/alerts.dart';
 import 'package:farmersguide/droughtdatafetch.dart';
 import 'package:farmersguide/insights.dart';
 import 'package:farmersguide/stormfetchdata.dart';
@@ -24,11 +25,17 @@ class _HomePageState extends State<HomePage> {
     // Initialize the pages with appropriate arguments
     _pages = <Widget>[
       _homeContent(), // Home content page with buttons
-      const CitySelectionStorm(), // Storm Forecast Page
+      CitySelectionStorm(
+        latitude: widget.latitude,
+        longitude: widget.longitude,
+      ), // Storm Forecast Page
       const HotTips(), // Insights Page
       CitySelection(
           latitude: widget.latitude,
           longitude: widget.longitude), // Drought Forecast Page
+      const StormNotificationPage(
+        location: '',
+      ),
     ];
   }
 
@@ -112,6 +119,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.wb_sunny, color: Colors.black),
             label: 'Drought Forecast',
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.notifications,
+                  color: Colors.black), // Notification Bell
+              label: 'Notifications'),
         ],
       ),
     );

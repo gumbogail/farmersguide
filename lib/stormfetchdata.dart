@@ -1,14 +1,15 @@
 import 'dart:convert';
+
 import 'package:farmersguide/stormresult.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class CitySelectionStorm extends StatefulWidget {
-  const CitySelectionStorm({super.key});
+  const CitySelectionStorm(
+      {super.key, required double longitude, required double latitude});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CitySelectionStormState createState() => _CitySelectionStormState();
 }
 
@@ -33,10 +34,10 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
         latitude = results['lat'];
         longitude = results['lng'];
 
-        // Send the real latitude and longitude to the storm model (FastAPI)
-        _sendCoordinatesToStormModel(latitude, longitude);
+        // Send the real latitude and longitude to the storm prediction model (FastAPI)
+        _sendCoordinatesToModel(latitude, longitude);
 
-        // Navigate to the StormPredictionPage after fetching coordinates
+        // Navigate to the PredictionPage after fetching coordinates
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -57,10 +58,10 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
   }
 
   // Function to send the coordinates to FastAPI for storm predictions
-  Future<void> _sendCoordinatesToStormModel(
+  Future<void> _sendCoordinatesToModel(
       double latitude, double longitude) async {
     final url = Uri.parse(
-        'https://storm-models.onrender.com/predict_storm?latitude=$latitude&longitude=$longitude');
+        'https://storm-models.onrender.com/predict_rain?latitude=$latitude&longitude=$longitude');
 
     try {
       final response = await http.get(url);
@@ -75,7 +76,7 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
       }
     } catch (e) {
       if (kDebugMode) {
-        print("Error sending coordinates to storm model: $e");
+        print("Error sending coordinates to model: $e");
       }
     }
   }
@@ -107,37 +108,6 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
               },
               child: const Text("Submit"),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StormPredictionPage extends StatelessWidget {
-  final double latitude;
-  final double longitude;
-
-  const StormPredictionPage({
-    super.key,
-    required this.latitude,
-    required this.longitude,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Storm Predictions'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Latitude: $latitude'),
-            Text('Longitude: $longitude'),
-            // Display the storm prediction results here after calling the API
-            // You can extend this to display the actual prediction results in the future
           ],
         ),
       ),

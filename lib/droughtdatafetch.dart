@@ -62,7 +62,7 @@ class _CitySelectionState extends State<CitySelection> {
   Future<void> _sendCoordinatesToModel(
       double latitude, double longitude) async {
     final url = Uri.parse(
-        'https://your-fastapi-server/predict_next_three_months?latitude=$latitude&longitude=$longitude');
+        'https://drought-models.onrender.com/predict_next_three_months?latitude=$latitude&longitude=$longitude');
 
     try {
       final response = await http.get(url);
