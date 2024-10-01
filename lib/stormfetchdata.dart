@@ -60,12 +60,12 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
   // Function to send the coordinates to FastAPI for storm predictions
   Future<void> _sendCoordinatesToModel(
       double latitude, double longitude) async {
-    final url = Uri.parse('https://storm-models.onrender.com/predict_rain/');
+    final url = Uri.parse('https://storm-models.onrender.com/predict/');
 
     // The data you're sending in the body, matching the FastAPI input model (WeatherInput)
     Map<String, dynamic> body = {
-      'location':
-          '$latitude,$longitude' // Format as 'latitude,longitude' string
+      'latitude': latitude,
+      'longitude': longitude,
     };
 
     try {

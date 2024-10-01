@@ -28,9 +28,9 @@ class _PredictionStormState extends State<PredictionStorm> {
   // Fetches prediction data for the next three months
   Future<void> _fetchThreeMonthPredictions() async {
     try {
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse(
-            'https://storm-models.onrender.com/predict_rain?latitude=${widget.latitude}&longitude=${widget.longitude}'),
+            'https://storm-models.onrender.com/predict?latitude=${widget.latitude}&longitude=${widget.longitude}'),
       );
 
       if (response.statusCode == 200) {
