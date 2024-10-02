@@ -25,16 +25,16 @@ class _HomePageState extends State<HomePage> {
     // Initialize the pages with appropriate arguments
     _pages = <Widget>[
       _homeContent(), // Home content page with buttons
-      CitySelectionStorm(
-        latitude: widget.latitude,
-        longitude: widget.longitude,
-      ), // Storm Forecast Page
-      const HotTips(), // Insights Page
+      const CitySelectionStorm(), // Storm Forecast Page
+      const HotTips(
+        rainfallForecast: [],
+      ), // Insights Page
       CitySelection(
           latitude: widget.latitude,
           longitude: widget.longitude), // Drought Forecast Page
       const StormNotificationPage(
-        location: '',
+        latitude: 0.0,
+        longitude: 0.0,
       ),
     ];
   }

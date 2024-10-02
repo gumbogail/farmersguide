@@ -3,9 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class StormNotificationPage extends StatefulWidget {
-  final String location; // Can be passed from home page
+  final double latitude;
+  final double longitude;
 
-  const StormNotificationPage({super.key, required this.location});
+  const StormNotificationPage({
+    Key? key,
+    required this.latitude,
+    required this.longitude,
+  }) : super(key: key);
 
   @override
   _StormNotificationPageState createState() => _StormNotificationPageState();
@@ -22,42 +27,26 @@ class _StormNotificationPageState extends State<StormNotificationPage> {
 
   Future<void> fetchStormStatus() async {
     final response = await http.post(
-      Uri.parse('https://storm-models.onrender.com/predict_today/'),
+      Uri.parse('https://storm-models.onrender.com/predict/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'location': widget.location, // Pass location for prediction
+      body: jsonEncode(<String, dynamic>{
+        'latitude': widget.latitude,
+        'longitude': widget.longitude,
       }),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      int stormOccurrence = data['storm_occurrence_today'];
-      int stormSeverity = data['storm_severity_today'];
+      int stormOccurrence = data['storm_occurrence'];
+      String stormSeverity = data['storm_severity'];
 
-      if (stormOccurrence == 1 && stormSeverity == 0) {
-        setState(() {
-          message = "No storm, just rain.";
-        });
-      } else if (stormOccurrence == 0 && stormSeverity == 0) {
-        setState(() {
-          message = "All clear, no storm.";
-        });
-      } else if (stormSeverity == 1) {
-        setState(() {
-          message = "Mild storm, stay safe.";
-        });
-      } else if (stormSeverity == 2) {
-        setState(() {
-          message = "Severe storm, be cautious!";
-        });
-      } else if (stormSeverity == 3) {
-        setState(() {
-          message = "Extreme storm, take immediate action!";
-        });
-      }
+      setState(() {
+        message =
+            "Storm Occurrence: $stormOccurrence\nStorm Severity: $stormSeverity";
+      });
     } else {
       setState(() {
         message = "Failed to fetch storm status.";
@@ -72,9 +61,17 @@ class _StormNotificationPageState extends State<StormNotificationPage> {
         title: const Text('Storm Notifications'),
       ),
       body: Center(
-        child: Text(
-          message,
-          style: const TextStyle(fontSize: 24),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            message,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
