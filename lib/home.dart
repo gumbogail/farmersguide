@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Initialize the pages with appropriate arguments
     _pages = <Widget>[
-      _homeContent(), // Home content page with buttons
+      _homeContent(), // Home content page with grid view
       const CitySelectionStorm(), // Storm Forecast Page
       const HotTips(
         rainfallForecast: [],
@@ -46,46 +46,58 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Method to build the home content page
+  // Method to build the home content page with GridView
   Widget _homeContent() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Hello!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          ListTile(
-            title: const Text('Storm Forecast'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1; // Navigate to Storm Forecast
-              });
-            },
-            leading: const Icon(Icons.storm),
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Drought Forecast'),
+      child: GridView.count(
+        crossAxisCount: 2, // Number of items per row
+        crossAxisSpacing: 10, // Space between columns
+        mainAxisSpacing: 10, // Space between rows
+        children: <Widget>[
+          GestureDetector(
             onTap: () {
               setState(() {
                 _selectedIndex = 3; // Navigate to Drought Forecast
               });
             },
-            leading: const Icon(Icons.wb_sunny),
+            child: const Card(
+              elevation: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.wb_sunny, size: 50, color: Colors.orange),
+                  SizedBox(height: 10),
+                  Text('Drought Forecast',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
           ),
-          const Divider(),
-          ListTile(
-            title: const Text('Hot Tips'),
+          GestureDetector(
             onTap: () {
               setState(() {
                 _selectedIndex = 2; // Navigate to Hot Tips (Insights)
               });
             },
-            leading: const Icon(Icons.lightbulb),
+            child: const Card(
+              elevation: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.storm,
+                    size: 50,
+                    color: Colors.blue, // Icon color
+                  ),
+                  SizedBox(height: 10),
+                  Text('Storm forecast',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -104,24 +116,24 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped, // Change page on tap
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
+            icon: Icon(Icons.home, color: Color.fromARGB(255, 0, 0, 0)),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.storm, color: Colors.black),
+            icon: Icon(Icons.storm, color: Color.fromARGB(255, 0, 0, 0)),
             label: 'Storm Forecast',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb, color: Colors.black),
+            icon: Icon(Icons.lightbulb, color: Color.fromARGB(255, 0, 0, 0)),
             label: 'Hot Tips',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.wb_sunny, color: Colors.black),
+            icon: Icon(Icons.wb_sunny, color: Color.fromARGB(255, 0, 0, 0)),
             label: 'Drought Forecast',
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications,
-                  color: Colors.black), // Notification Bell
+                  color: Color.fromARGB(255, 0, 0, 0)), // Notification Bell
               label: 'Notifications'),
         ],
       ),

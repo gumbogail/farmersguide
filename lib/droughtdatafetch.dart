@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:farmersguide/droughtresuts.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +17,14 @@ class _CitySelectionState extends State<CitySelection> {
   final TextEditingController _cityController = TextEditingController();
   late double latitude;
   late double longitude;
+  bool _isLoading = false; // Loading state
 
   // Function to fetch coordinates based on city name
   Future<void> _getCoordinatesFromCity(String cityName) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     String apiKey =
         "2381429f64d640a29be0e24e30de2372"; // Replace with your API key
     final url = Uri.parse(
@@ -47,14 +51,14 @@ class _CitySelectionState extends State<CitySelection> {
           ),
         );
       } else {
-        if (kDebugMode) {
-          print("Error fetching coordinates: ${response.statusCode}");
-        }
+        _showErrorSnackbar("Error fetching coordinates");
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Error fetching coordinates: $e");
-      }
+      _showErrorSnackbar("Error fetching coordinates: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -71,15 +75,21 @@ class _CitySelectionState extends State<CitySelection> {
           print("Prediction received");
         }
       } else {
-        if (kDebugMode) {
-          print("Error: ${response.statusCode}");
-        }
+        _showErrorSnackbar("Error: ${response.statusCode}");
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Error sending coordinates to model: $e");
-      }
+      _showErrorSnackbar("Error sending coordinates to model: $e");
     }
+  }
+
+  // Function to show error snackbar
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -91,23 +101,37 @@ class _CitySelectionState extends State<CitySelection> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _cityController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Enter city name",
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                labelStyle: const TextStyle(fontSize: 18),
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                String city = _cityController.text;
-                if (city.isNotEmpty) {
-                  _getCoordinatesFromCity(city);
-                }
-              },
-              child: const Text("Submit"),
+              onPressed: _isLoading
+                  ? null
+                  : () {
+                      String city = _cityController.text;
+                      if (city.isNotEmpty) {
+                        _getCoordinatesFromCity(city);
+                      } else {
+                        _showErrorSnackbar("City name cannot be empty");
+                      }
+                    },
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Text("Submit"),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
             ),
           ],
         ),

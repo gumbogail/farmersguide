@@ -9,6 +9,12 @@ class HotTips extends StatelessWidget {
   });
 
   String generateTip() {
+    // Check if rainfallForecast is empty
+    if (rainfallForecast.isEmpty) {
+      return "No rainfall data available. Please check again later.";
+    }
+
+    // Calculate the average rainfall
     double averageRainfall =
         rainfallForecast.reduce((a, b) => a + b) / rainfallForecast.length;
 
@@ -23,6 +29,7 @@ class HotTips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Generate a farming tip
     String farmingTip = generateTip();
 
     return Scaffold(
@@ -42,13 +49,20 @@ class HotTips extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            for (int i = 0; i < rainfallForecast.length; i++)
-              ListTile(
-                leading: const Icon(Icons.cloud, color: Colors.blueAccent),
-                title: Text(
-                  'Month ${i + 1}: ${rainfallForecast[i].toStringAsFixed(2)} mm',
-                  style: const TextStyle(fontSize: 18),
-                ),
+            // Show rainfall data if available
+            if (rainfallForecast.isNotEmpty)
+              for (int i = 0; i < rainfallForecast.length; i++)
+                ListTile(
+                  leading: const Icon(Icons.cloud, color: Colors.blueAccent),
+                  title: Text(
+                    'Month ${i + 1}: ${rainfallForecast[i].toStringAsFixed(2)} mm',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                )
+            else
+              const Text(
+                'No rainfall data available.',
+                style: TextStyle(fontSize: 18),
               ),
             const SizedBox(height: 20),
             const Text(

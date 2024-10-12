@@ -135,7 +135,7 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
               },
               child: _isLoading
                   ? const CircularProgressIndicator(
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     )
                   : const Text("Submit"),
             ),

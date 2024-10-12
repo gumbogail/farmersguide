@@ -1,3 +1,4 @@
+import 'package:farmersguide/insights.dart';
 import 'package:flutter/material.dart';
 
 class PredictionStorm extends StatelessWidget {
@@ -49,7 +50,7 @@ class PredictionStorm extends StatelessWidget {
             Text(
               "Storm Occurrence: ${stormOccurrence == 1 ? 'Yes' : 'No'}",
               style: const TextStyle(
-                fontSize: 10,
+                fontSize: 16,
               ),
             ),
             Text(
@@ -62,7 +63,7 @@ class PredictionStorm extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               "Rainfall Forecast:",
-              style: TextStyle(fontSize: 10),
+              style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
             Expanded(
@@ -93,6 +94,26 @@ class PredictionStorm extends StatelessWidget {
                     ),
                   );
                 },
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Add a button to navigate to the InsightsPage
+            // Button to navigate to the HotTips page
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HotTips(
+                        rainfallForecast: rainfallForecast
+                            .map((e) => e as double)
+                            .toList(), // Ensure casting to double
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Go to Insights'),
               ),
             ),
           ],
