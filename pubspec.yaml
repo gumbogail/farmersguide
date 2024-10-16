@@ -25,19 +25,19 @@ flutter:
 
   # Add your assets for the splash screen
   assets:
-    - assets/images/robotlogo.png.webp # Path to your robot logo
+    - assets/images/robotlogo.png.png # Path to your robot logo
 
 # flutter_native_splash configuration
 flutter_native_splash:
   color: "#ffffff" # Background color of the splash screen
-  image: assets/images/robotlogo.png # Path to your robot logo
+  image: assets/images/robotlogo.png.png # Path to your robot logo
   android: true
   ios: true
   android_gravity: center
   ios_content_mode: center
   fullscreen: true
-  title:
-    text: "Farmers Guide" 
-    color: "#000000" # Text color
-    font_size: 40
-    font_family: "Roboto" # Optional: Custom font family
+  # title:
+  #   text: "Farmers Guide" 
+  #   color: "#000000" # Text color
+  #   font_size: 40
+  #   font_family: "Roboto" # Optional: Custom font family

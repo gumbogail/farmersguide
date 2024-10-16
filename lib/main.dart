@@ -1,6 +1,6 @@
 import 'package:farmersguide/home.dart';
 import 'package:flutter/material.dart';
-import 'droughtresuts.dart'; // Prediction page
+// import 'droughtresuts.dart'; // Prediction page
 
 void main() {
   runApp(const MyApp());
