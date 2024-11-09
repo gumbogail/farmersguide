@@ -41,10 +41,10 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
         await _sendCoordinatesToModel(latitude, longitude);
       } else {
         _showErrorSnackbar(
-            "Error fetching coordinates: ${response.statusCode}");
+            context, "Error fetching coordinates: ${response.statusCode}");
       }
     } catch (e) {
-      _showErrorSnackbar("Error fetching coordinates: $e");
+      _showErrorSnackbar(context, "Error fetching coordinates: $e");
     }
 
     setState(() {
@@ -55,18 +55,15 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
   // Function to send the coordinates to FastAPI for storm predictions
   Future<void> _sendCoordinatesToModel(
       double latitude, double longitude) async {
-    final url = Uri.parse('https://storm-models.onrender.com/predict/');
-
-    Map<String, dynamic> body = {
-      'latitude': latitude,
-      'longitude': longitude,
-    };
+    // Build the URL with query parameters for latitude and longitude
+    final url = Uri.parse(
+        'https://storm-models-vnx8.onrender.com/predict?latitude=${latitude}&longitude=${longitude}');
 
     try {
-      final response = await http.post(
+      // Send the GET request
+      final response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
-        body: json.encode(body),
       );
 
       if (response.statusCode == 200) {
@@ -90,17 +87,17 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
           ),
         );
       } else if (response.statusCode == 422) {
-        _showErrorSnackbar("Error 422: Unprocessable Entity");
+        _showErrorSnackbar(context, "Error 422: Unprocessable Entity");
       } else {
-        _showErrorSnackbar("Error: ${response.statusCode}");
+        _showErrorSnackbar(context, "Error: ${response.statusCode}");
       }
     } catch (e) {
-      _showErrorSnackbar("Error sending coordinates to model: $e");
+      _showErrorSnackbar(context, "Error sending coordinates to model: $e");
     }
   }
 
-  // Show an error message to the user using a snackbar
-  void _showErrorSnackbar(String message) {
+// Show an error message to the user using a snackbar
+  void _showErrorSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
@@ -130,7 +127,7 @@ class _CitySelectionStormState extends State<CitySelectionStorm> {
                 if (city.isNotEmpty) {
                   _getCoordinatesFromCity(city);
                 } else {
-                  _showErrorSnackbar("City name cannot be empty");
+                  _showErrorSnackbar(context, "City name cannot be empty");
                 }
               },
               child: _isLoading

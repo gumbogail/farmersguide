@@ -66,7 +66,7 @@ class _CitySelectionState extends State<CitySelection> {
   Future<void> _sendCoordinatesToModel(
       double latitude, double longitude) async {
     final url = Uri.parse(
-        'https://drought-models.onrender.com/predict_next_three_months?latitude=$latitude&longitude=$longitude');
+        'https://drought-models-bedx.onrender.com/predict_next_three_months?latitude=$latitude&longitude=$longitude');
 
     try {
       final response = await http.get(url);
@@ -105,10 +105,10 @@ class _CitySelectionState extends State<CitySelection> {
           children: [
             TextField(
               controller: _cityController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Enter city name",
-                border: const OutlineInputBorder(),
-                labelStyle: const TextStyle(fontSize: 18),
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(fontSize: 18),
               ),
             ),
             const SizedBox(height: 16),
@@ -123,15 +123,15 @@ class _CitySelectionState extends State<CitySelection> {
                         _showErrorSnackbar("City name cannot be empty");
                       }
                     },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
               child: _isLoading
                   ? const CircularProgressIndicator(
                       color: Colors.white,
                     )
                   : const Text("Submit"),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
             ),
           ],
         ),
