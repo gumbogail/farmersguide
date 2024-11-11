@@ -27,7 +27,7 @@ class _StormNotificationPageState extends State<StormNotificationPage> {
 
   Future<void> fetchStormStatus() async {
     final response = await http.post(
-      Uri.parse('https://storm-models-vnx8.onrender.com/predict'),
+      Uri.parse('https://storm-models-vnx8.onrender.com/predict/today/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
